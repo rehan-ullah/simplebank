@@ -7,6 +7,7 @@ import (
 
 const alphabet = "abcdefghijklmnopqrstuvwxyz"
 
+// @ Generate Random String
 func RandomString(n int) string {
 	var sb strings.Builder
 	k := len(alphabet)
