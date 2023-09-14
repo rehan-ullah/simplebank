@@ -16,4 +16,10 @@ migrationup:
 migrationdown:
 	migrate -path db/migration -database "postgres://postgres:postgres@localhost:5432/postgres?sslmode=disable" -verbose down
 
-.PHONY: run dockerstart dockerstop migrationup migrationdown
+pull:
+	git pull origin main
+
+push:
+	git push origin main
+
+.PHONY: run dockerstart dockerstop migrationup migrationdown pull push

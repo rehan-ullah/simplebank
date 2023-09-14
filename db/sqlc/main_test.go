@@ -14,15 +14,17 @@ const (
 	dbSrc    = "postgresql://postgres:postgres@localhost:5432/postgres?sslmode=disable"
 )
 
-var testingQueries *Queries
+var testingQueries *Queries // ? to access globally
+var testDB *sql.DB          // ? to access globally
 
 func TestMain(m *testing.M) {
-	conn, err := sql.Open(dbDriver, dbSrc)
+	var err error
+	testDB, err = sql.Open(dbDriver, dbSrc)
 	if err != nil {
 		log.Fatal("cannot connect to db:", err)
 	}
 
-	testingQueries = New(conn)
+	testingQueries = New(testDB)
 
 	os.Exit(m.Run())
 }
