@@ -20,7 +20,10 @@ RETURNING *;
 
 -- name: GetAllAccounts :many
 SELECT * FROM accounts
-ORDER BY accounts.id;
+ORDER BY accounts.id LIMIT $1 OFFSET $2;
+
+-- name: GetCountAllAccounts :one
+SELECT COUNT(id) FROM accounts;
 
 -- name: DeleteAccounts :exec
 DELETE FROM accounts WHERE id = $1;

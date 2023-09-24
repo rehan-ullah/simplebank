@@ -60,17 +60,22 @@ func TestGetAccounts(t *testing.T) {
 
 func getAllAccount(t *testing.T) {
 	var accoutsList []Account
-	for i := 0; i < 3; i++ {
+	limit := 3
+	for i := 0; i < limit; i++ {
 		a := createRandomAccount(t)
 		accoutsList = append(accoutsList, a)
 	}
 
-	as, err := testingQueries.GetAllAccounts(context.Background())
+	as, err := testingQueries.GetAllAccounts(context.Background(), GetAllAccountsParams{
+		Limit:  int32(limit),
+		Offset: 0,
+	})
 
 	require.NoError(t, err)
 	require.NotNil(t, as)
 	require.NotEmpty(t, as)
 	require.GreaterOrEqual(t, len(as), len(accoutsList))
+	require.LessOrEqual(t, len(as), limit)
 
 	for j := range accoutsList {
 		deleteAccountById(t, accoutsList[j].ID)

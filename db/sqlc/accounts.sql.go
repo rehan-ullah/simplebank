@@ -66,16 +66,21 @@ func (q *Queries) GetAccounts(ctx context.Context, id int64) (Account, error) {
 
 const getAllAccounts = `-- name: GetAllAccounts :many
 SELECT id, owner, balance, currency, created_at FROM accounts
-ORDER BY accounts.id
+ORDER BY accounts.id LIMIT $1 OFFSET $2
 `
 
-func (q *Queries) GetAllAccounts(ctx context.Context) ([]Account, error) {
-	rows, err := q.db.QueryContext(ctx, getAllAccounts)
+type GetAllAccountsParams struct {
+	Limit  int32 `json:"limit"`
+	Offset int32 `json:"offset"`
+}
+
+func (q *Queries) GetAllAccounts(ctx context.Context, arg GetAllAccountsParams) ([]Account, error) {
+	rows, err := q.db.QueryContext(ctx, getAllAccounts, arg.Limit, arg.Offset)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
-	var items []Account
+	items := []Account{}
 	for rows.Next() {
 		var i Account
 		if err := rows.Scan(
@@ -96,6 +101,17 @@ func (q *Queries) GetAllAccounts(ctx context.Context) ([]Account, error) {
 		return nil, err
 	}
 	return items, nil
+}
+
+const getCountAllAccounts = `-- name: GetCountAllAccounts :one
+SELECT COUNT(id) FROM accounts
+`
+
+func (q *Queries) GetCountAllAccounts(ctx context.Context) (int64, error) {
+	row := q.db.QueryRowContext(ctx, getCountAllAccounts)
+	var count int64
+	err := row.Scan(&count)
+	return count, err
 }
 
 const updateAccounts = `-- name: UpdateAccounts :one

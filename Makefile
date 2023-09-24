@@ -22,4 +22,7 @@ pull:
 push:
 	git push origin main
 
-.PHONY: run dockerstart dockerstop migrationup migrationdown pull push
+sqlc:
+	sqlc generate
+
+.PHONY: run dockerstart dockerstop migrationup migrationdown pull push sqlc
