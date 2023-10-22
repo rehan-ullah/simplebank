@@ -3,6 +3,7 @@ package api
 import (
 	"database/sql"
 	"errors"
+	"log"
 	"net/http"
 	"strconv"
 
@@ -62,6 +63,7 @@ type getAllReq struct {
 func (server *Server) GetAllAccounts(c *gin.Context) {
 	var req getAllReq
 	if err := c.ShouldBindQuery(&req); err != nil {
+		log.Println(err)
 		c.JSON(http.StatusBadRequest, utils.ErrorResponse(err))
 		return
 	}
