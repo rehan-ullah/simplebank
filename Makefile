@@ -8,18 +8,18 @@ createdb:
 dropdb:
 	docker exec -it postgres dropdb postgres
 dockerstart:
-	docker start postgres_con
+	docker start postgres
 dockerstop:
 	docker stop postgres_con
 
 createmigrate:
-	migrate create -ext sql -dir db/migration -seq init_schema
+	migrate create -ext sql -dir db/migrations -seq init_schema
 
 migrationup:
-	migrate -path db/migration -database "postgres://postgres:postgres@localhost:5432/postgres?sslmode=disable" -verbose up
+	migrate -path db/migrations -database "postgres://postgres:postgres@localhost:5432/postgres?sslmode=disable" -verbose up
 
 migrationdown:
-	migrate -path db/migration -database "postgres://postgres:postgres@localhost:5432/postgres?sslmode=disable" -verbose down
+	migrate -path db/migrations -database "postgres://postgres:postgres@localhost:5432/postgres?sslmode=disable" -verbose down
 
 pull:
 	git pull origin main
@@ -29,5 +29,11 @@ push:
 
 sqlc:
 	docker run --rm -v D:/golang/simplebank:/src -w /src sqlc/sqlc generate
+
+dmigration:
+	docker run --rm -v D:/golang/simplebank/db/migrations:/migrations --network host migrate/migrate -path=/migrations/ -database postgres://postgres:postgres@localhost:5432/postgres?sslmode=disable up
+
+dmigrationd:
+	docker run --rm -v D:/golang/simplebank/db/migrations:/migrations --network host migrate/migrate -path=/migrations/ -database postgres://postgres:postgres@localhost:5432/postgres?sslmode=disable down 1
 
 .PHONY: run newcontainer createdb dropdb dockerstart dockerstop migrationup migrationdown pull push sqlc
