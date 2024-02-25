@@ -23,6 +23,6 @@ push:
 	git push origin main
 
 sqlc:
-	sqlc generate
+	docker run --rm -v D:/golang/simplebank:/src -w /src sqlc/sqlc generate
 
 .PHONY: run dockerstart dockerstop migrationup migrationdown pull push sqlc
