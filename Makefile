@@ -5,11 +5,12 @@ newcontainer:
 	docker run --name postgres -p 5432:5432 -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=postgres -d postgres:latest
 createdb:
 	docker exec -it postgres createdb --username=postgres --owner=postgres postgres
+dropdb:
+	docker exec -it postgres dropdb postgres
 dockerstart:
-	sudo docker start postgres_con
-
+	docker start postgres_con
 dockerstop:
-	sudo docker stop postgres_con
+	docker stop postgres_con
 
 createmigrate:
 	migrate create -ext sql -dir db/migration -seq init_schema
@@ -29,4 +30,4 @@ push:
 sqlc:
 	docker run --rm -v D:/golang/simplebank:/src -w /src sqlc/sqlc generate
 
-.PHONY: run dockerstart dockerstop migrationup migrationdown pull push sqlc
+.PHONY: run newcontainer createdb dropdb dockerstart dockerstop migrationup migrationdown pull push sqlc
