@@ -4,7 +4,7 @@ run:
 newcontainer:
 	docker run --name postgres -p 5432:5432 -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=postgres -d postgres:latest
 createdb:
-	docker exec -it postgres createdb --username=postgres --owner=postgres simple_bank
+	docker exec -it postgres createdb --username=postgres --owner=postgres postgres
 dockerstart:
 	sudo docker start postgres_con
 
